@@ -5,7 +5,6 @@ require 'selenium-webdriver'
 require 'site_prism'
 require 'yaml'
 
-# Load everything for everything: load sections for pages, load all page objects for all specs
 require 'page_objects/all_page_objects'
 
 
@@ -38,7 +37,11 @@ Capybara.javascript_driver = ENV["r_driver"].to_sym unless ENV["r_driver"].nil?
 # r_driver=saucelabs:phu:win7_ff34
 
 # sets app_host based on user input(env variable)
-app_host = ENV['r_env'] # eg. 'qa'
+app_host = ENV['r_env'] || begin
+  puts "r_env is not set, using default env 'qa'"
+  puts "TODO: need a real logger!"
+  'qa'
+end
 env_yaml = YAML.load_file("#{Dir.pwd}/config/env.yml")
 Capybara.app_host = env_yaml[app_host]
 
