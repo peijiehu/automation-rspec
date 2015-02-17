@@ -7,6 +7,6 @@ class SignIn < Base
     email_field.set email
     password_field.set password
     sign_in_button.click
-    Home.new
+    Srp.new
   end
 end
