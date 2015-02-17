@@ -1,4 +1,3 @@
-require_relative 'sections/header_section'
 # HomePage
 class Home < Base
   set_url '/'
