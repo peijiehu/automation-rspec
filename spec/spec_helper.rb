@@ -3,17 +3,14 @@ require 'capybara'
 require 'capybara/rspec'
 require 'selenium-webdriver'
 require 'site_prism'
+require 'yaml'
+
+# Load everything for everything: load sections for pages, load all page objects for all specs
+require 'page_objects/all_page_objects'
+
 
 Capybara.run_server = false
 Capybara.default_wait_time = 10
-Capybara.app_host = 'http://www.rent.com'
-
-Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new(app, :browser => :chrome)
-end
-
-# change default js enabled driver
-# Capybara.javascript_driver = :chrome
 
 # By default, Capybara uses the :rack_test driver, which is fast
 # but limited: it does not support JavaScript,
@@ -23,7 +20,27 @@ end
 # to have overall best performance for entire suite
 # Capybara.default_driver = :selenium
 
+# local drivers registration
+drivers = [:firefox, :chrome]
+drivers.each do |driver|
+  Capybara.register_driver driver do |app|
+    Capybara::Selenium::Driver.new(app, :browser => driver)
+  end
+end
 
+# set default js enabled driver based on user input(env variable),
+# which applies to all tests marked with :type => :feature
+# default is :selenium, and selenium uses :firefox by default
+Capybara.javascript_driver = ENV["r_driver"].to_sym unless ENV["r_driver"].nil?
+
+# r_driver=nil
+# r_driver=chrome
+# r_driver=saucelabs:phu:win7_ff34
+
+# sets app_host based on user input(env variable)
+app_host = ENV['r_env'] # eg. 'qa'
+env_yaml = YAML.load_file("#{Dir.pwd}/config/env.yml")
+Capybara.app_host = env_yaml[app_host]
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

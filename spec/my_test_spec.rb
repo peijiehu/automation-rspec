@@ -1,15 +1,12 @@
-require_relative 'my_pages'
-
 describe 'Rent home page', :type => :feature, :js => true do
 
-  EMAIL = 'qarent.h1@gmail.com'
-  PASSWORD = 'qarent123'
+  # Read EMAIL and PASSWORD from config/accounts.yml
 
   before :all do
   end
 
   before :each do
-    @hp = MyPages::Home.new
+    @hp = Home.new
     @hp.load
     @hp.wait_for_header(5)
   end
