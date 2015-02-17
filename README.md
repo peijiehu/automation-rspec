@@ -4,21 +4,20 @@ Prototype for building test automation framework with RSpec, Capybara, Selenium 
 Other than the primary usage being for selenium tests, this framework can be embedded into an
 ruby web app, and testing against the locally running web app without browser.
 
-# Setup
+## Setup
     Clone this project
     bundle
 
-# Run Specs
+## Run Specs
     rspec                            # to run all specs, with default driver and env
     r_driver=chrome r_env=stg rspec  # to run all specs, with chrome and on stg
 
+## What should be in the hidden config/
 
-# What should be in the hidden config/
-
-# TODO
+## TODO
     make a real logger please!
 
-# My Preference
+## My Preference
 
 I'm not a big fan of keyword driven framework such as Cucumber, it requires work by more people
 from different departments, an engineer can get bored quickly and it can become hard to maintain;
