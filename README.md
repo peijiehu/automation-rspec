@@ -20,7 +20,8 @@ ruby web app, and testing against the locally running web app without browser.
         env.yml              # remote app name and url to be tested on
 
 ## TODO
-    make a real logger please!
+    saucelabs integration;
+    parallelization
 
 ## My Preference
 
