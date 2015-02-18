@@ -42,50 +42,53 @@ local_drivers.each do |driver|
   end
 end
 
-
-# remote driver registration
-
-remote_driver_yaml = YAML.load_file("#{Dir.pwd}/config/driver/saucelabs.yml")
-
-cmd_r_driver = ENV['r_driver'].split(':') unless ENV['r_driver'].nil? # ['saucelabs', 'phu', 'win7_ff34']
-cmd_r_driver_browser = cmd_r_driver[0]
-
-remote_capabilities = Selenium::WebDriver::Remote::Capabilities.new
-
-# Retrieve hub url, user credentials and browser info from saucelabs.yml
-
-overrides_hash = remote_driver_yaml['overrides']
-if cmd_r_driver[1].nil?
-  # set default
-  user = remote_driver_yaml['hub']['user']
-  pass = remote_driver_yaml['hub']['pass']
-  remote_capabilities = {
-      'browserName' => 'firefox',
-      'version' => '34',
-      'platform' => 'Windows 7'
-  }
+if ENV['r_driver'].nil?
+  # set default_driver to a local firefox
+  default_driver = 'firefox'
 else
-  # set by overrides
-  user = overrides_hash[cmd_r_driver[1]]['hub']['user']
-  pass = overrides_hash[cmd_r_driver[1]]['hub']['pass']
-  remote_capabilities = overrides_hash[cmd_r_driver[2]]['capabilities']
-end
+  # cmd_r_driver may be 'chrome' or ['saucelabs', 'phu', 'win7_ff34'], etc
+  cmd_r_driver = ENV['r_driver'].split(':')
+  # remote driver registration
+  # Retrieve hub url, user credentials and browser info from saucelabs.yml
+  if ENV['r_driver'].include?('saucelabs')
+    remote_driver_yaml = YAML.load_file("#{Dir.pwd}/config/driver/saucelabs.yml")
+    remote_capabilities = Selenium::WebDriver::Remote::Capabilities.new
+    overrides_hash = remote_driver_yaml['overrides']
+    if cmd_r_driver[1].nil?
+      # set default
+      user = remote_driver_yaml['hub']['user']
+      pass = remote_driver_yaml['hub']['pass']
+      remote_capabilities = {
+          'browserName' => 'firefox',
+          'version' => '34',
+          'platform' => 'Windows 7'
+      }
+    else
+      # set by overrides
+      user = overrides_hash[cmd_r_driver[1]]['hub']['user']
+      pass = overrides_hash[cmd_r_driver[1]]['hub']['pass']
+      remote_capabilities = overrides_hash[cmd_r_driver[2]]['capabilities']
+    end
 
-Utils.logger.debug remote_capabilities
-
-default_remote_options = {
-    :browser => :remote,
-    :url => "http://#{user}:#{pass}@ondemand.saucelabs.com/wd/hub",
-    :desired_capabilities => remote_capabilities
-}
-Capybara.register_driver :saucelabs do |app|
-  Capybara::Selenium::Driver.new(app, default_remote_options)
+    Utils.logger.debug remote_capabilities
+    puts remote_capabilities
+    default_remote_options = {
+        :browser => :remote,
+        :url => "http://#{user}:#{pass}@ondemand.saucelabs.com/wd/hub",
+        :desired_capabilities => remote_capabilities
+    }
+    Capybara.register_driver :saucelabs do |app|
+      Capybara::Selenium::Driver.new(app, default_remote_options)
+    end
+  end
+  # set default_driver to a local browser or saucelabs
+  default_driver = cmd_r_driver[0]
 end
 
 # set default js enabled driver based on user input(env variable),
 # which applies to all tests marked with :type => :feature
 # default is :selenium, and selenium uses :firefox by default
-Capybara.javascript_driver = cmd_r_driver_browser.to_sym
+Capybara.javascript_driver = default_driver.to_sym
 
 # sets app_host based on user input(env variable)
 app_host = ENV['r_env'] || begin
@@ -97,9 +100,9 @@ Capybara.app_host = env_yaml[app_host]
 
 RSpec.configure do |config|
 
-  # todo doesn't work, need to fix
-  config.append_after :each do
-    Capybara.reset_sessions!
+  # quit driver right after each example's executed
+  config.after :each do
+    Capybara.current_session.driver.quit
   end
 
   # rspec-expectations config goes here. You can use an alternate
@@ -129,13 +132,13 @@ RSpec.configure do |config|
   # to individual examples or groups you care about by tagging them with
   # `:focus` metadata. When nothing is tagged with `:focus`, all examples
   # get run.
-  config.filter_run :focus
-  config.run_all_when_everything_filtered = true
+  # config.filter_run :focus
+  # config.run_all_when_everything_filtered = true
 
   # causes spec to fail, haven't inspected yet
   # config.disable_monkey_patching!
 
-  config.warnings = true
+  # config.warnings = true
 
   # Many RSpec users commonly either run the entire suite or an individual
   # file, and it's useful to allow more verbose output when running an
