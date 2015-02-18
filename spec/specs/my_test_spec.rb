@@ -9,6 +9,7 @@ describe 'Rent home page', :type => :feature, :js => true do
   end
 
   before :each do
+    Utils.logger.debug('debugging spec, you can put logger in spec')
     @hp = Home.new
     @hp.load
     @hp.wait_for_lo_header(5)

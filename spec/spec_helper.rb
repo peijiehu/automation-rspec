@@ -4,9 +4,23 @@ require 'capybara/rspec'
 require 'selenium-webdriver'
 require 'site_prism'
 require 'yaml'
+require 'active_support'
 
 require 'page_objects/all_page_objects'
 
+# Logging
+module Utils
+  class Logger < ActiveSupport::Logger
+    def initialize
+      log_file_path = "#{Dir.pwd}/logs/rspec.log"
+      log_file = File.open(log_file_path, File::WRONLY | File::APPEND | File::CREAT) unless log_file_path.respond_to?(:write)
+      super(log_file)
+    end
+  end
+  def self.logger
+    Logger.new
+  end
+end
 
 Capybara.run_server = false
 Capybara.default_wait_time = 10
@@ -38,8 +52,7 @@ Capybara.javascript_driver = ENV["r_driver"].to_sym unless ENV["r_driver"].nil?
 
 # sets app_host based on user input(env variable)
 app_host = ENV['r_env'] || begin
-  puts "r_env is not set, using default env 'qa'"
-  puts "TODO: need a real logger!"
+  Utils.logger.debug "r_env is not set, using default env 'qa'"
   'qa'
 end
 env_yaml = YAML.load_file("#{Dir.pwd}/config/env.yml")
