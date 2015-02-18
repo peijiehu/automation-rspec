@@ -13,6 +13,11 @@ ruby web app, and testing against the locally running web app without browser.
     r_driver=chrome r_env=stg rspec  # to run all specs, with chrome and on stg
 
 ## What should be in the hidden config/
+    config/
+        driver/
+            saucelabs.yml    # remote driver saucelabs and its users' accounts and capabilities configuration
+        accounts.yml         # user accounts credentials to be used for specs
+        env.yml              # remote app name and url to be tested on
 
 ## TODO
     make a real logger please!
