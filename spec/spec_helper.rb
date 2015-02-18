@@ -33,22 +33,59 @@ Capybara.default_wait_time = 10
 # to have overall best performance for entire suite
 # Capybara.default_driver = :selenium
 
+
 # local drivers registration
-drivers = [:firefox, :chrome]
-drivers.each do |driver|
+local_drivers = [:firefox, :chrome]
+local_drivers.each do |driver|
   Capybara.register_driver driver do |app|
     Capybara::Selenium::Driver.new(app, :browser => driver)
   end
 end
 
+
+# remote driver registration
+
+remote_driver_yaml = YAML.load_file("#{Dir.pwd}/config/driver/saucelabs.yml")
+
+cmd_r_driver = ENV['r_driver'].split(':') unless ENV['r_driver'].nil? # ['saucelabs', 'phu', 'win7_ff34']
+cmd_r_driver_browser = cmd_r_driver[0]
+
+remote_capabilities = Selenium::WebDriver::Remote::Capabilities.new
+
+# Retrieve hub url, user credentials and browser info from saucelabs.yml
+
+overrides_hash = remote_driver_yaml['overrides']
+if cmd_r_driver[1].nil?
+  # set default
+  user = remote_driver_yaml['hub']['user']
+  pass = remote_driver_yaml['hub']['pass']
+  remote_capabilities = {
+      'browserName' => 'firefox',
+      'version' => '34',
+      'platform' => 'Windows 7'
+  }
+else
+  # set by overrides
+  user = overrides_hash[cmd_r_driver[1]]['hub']['user']
+  pass = overrides_hash[cmd_r_driver[1]]['hub']['pass']
+  remote_capabilities = overrides_hash[cmd_r_driver[2]]['capabilities']
+end
+
+Utils.logger.debug remote_capabilities
+
+default_remote_options = {
+    :browser => :remote,
+    :url => "http://#{user}:#{pass}@ondemand.saucelabs.com/wd/hub",
+    :desired_capabilities => remote_capabilities
+}
+Capybara.register_driver :saucelabs do |app|
+  Capybara::Selenium::Driver.new(app, default_remote_options)
+end
+
 # set default js enabled driver based on user input(env variable),
 # which applies to all tests marked with :type => :feature
 # default is :selenium, and selenium uses :firefox by default
-Capybara.javascript_driver = ENV["r_driver"].to_sym unless ENV["r_driver"].nil?
-
-# r_driver=nil
-# r_driver=chrome
-# r_driver=saucelabs:phu:win7_ff34
+Capybara.javascript_driver = cmd_r_driver_browser.to_sym
 
 # sets app_host based on user input(env variable)
 app_host = ENV['r_env'] || begin
@@ -59,6 +96,12 @@ env_yaml = YAML.load_file("#{Dir.pwd}/config/env.yml")
 Capybara.app_host = env_yaml[app_host]
 
 RSpec.configure do |config|
+
+  # todo doesn't work, need to fix
+  config.append_after :each do
+    Capybara.reset_sessions!
+  end
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
@@ -82,9 +125,6 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 
-# The settings below are suggested to provide a good initial experience
-# with RSpec, but feel free to customize to your heart's content.
-=begin
   # These two settings work together to allow you to limit a spec run
   # to individual examples or groups you care about by tagging them with
   # `:focus` metadata. When nothing is tagged with `:focus`, all examples
@@ -92,15 +132,9 @@ RSpec.configure do |config|
   config.filter_run :focus
   config.run_all_when_everything_filtered = true
 
-  # Limits the available syntax to the non-monkey patched syntax that is
-  # recommended. For more details, see:
-  #   - http://myronmars.to/n/dev-blog/2012/06/rspecs-new-expectation-syntax
-  #   - http://teaisaweso.me/blog/2013/05/27/rspecs-new-message-expectation-syntax/
-  #   - http://myronmars.to/n/dev-blog/2014/05/notable-changes-in-rspec-3#new__config_option_to_disable_rspeccore_monkey_patching
-  config.disable_monkey_patching!
+  # causes spec to fail, haven't inspected yet
+  # config.disable_monkey_patching!
 
-  # This setting enables warnings. It's recommended, but in some cases may
-  # be too noisy due to issues in dependencies.
   config.warnings = true
 
   # Many RSpec users commonly either run the entire suite or an individual
@@ -129,5 +163,4 @@ RSpec.configure do |config|
   # test failures related to randomization by passing the same `--seed` value
   # as the one that triggered the failure.
   Kernel.srand config.seed
-=end
 end

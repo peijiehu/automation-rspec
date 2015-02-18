@@ -10,7 +10,10 @@ ruby web app, and testing against the locally running web app without browser.
 
 ## Run Specs
     rspec                            # to run all specs, with default driver and env
-    r_driver=chrome r_env=stg rspec  # to run all specs, with chrome and on stg
+    r_env=stg rspec                  # to run all specs, on stg server
+    r_driver=chrome rspec            # to run all specs, with chrome
+    r_driver=saucelabs rspec
+    r_driver=saucelabs:sauce_username:platform_and_browser rspec
 
 ## What should be in the hidden config/
     config/
@@ -20,8 +23,11 @@ ruby web app, and testing against the locally running web app without browser.
         env.yml              # remote app name and url to be tested on
 
 ## TODO
+    reset session after each example;
     saucelabs integration;
-    parallelization
+      - further integrate: send test name, status, etc to saucelabs jobs
+    parallelization;
+    show datetime in log
 
 ## My Preference
 
