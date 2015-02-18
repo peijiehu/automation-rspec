@@ -23,11 +23,12 @@ ruby web app, and testing against the locally running web app without browser.
         env.yml              # remote app name and url to be tested on
 
 ## TODO
-    reset session after each example;
-    saucelabs integration;
-      - further integrate: send test name, status, etc to saucelabs jobs
-    parallelization;
-    show datetime in log
+* reset session after each example;
+* saucelabs integration;
+    - further integrate: send test name, status, etc to saucelabs jobs
+* parallelization;
+* show datetime in log;
+* tagger utility to add tag(s) to spec/example
 
 ## My Preference
 
