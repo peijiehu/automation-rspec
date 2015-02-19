@@ -1,4 +1,4 @@
-describe 'Rent home page', :type => :feature, :js => true do
+describe 'home page', :type => :feature, :js => true do
 
   # Read EMAIL and PASSWORD from config/accounts.yml
   accounts_yml = YAML.load_file("#{Dir.pwd}/config/accounts.yml")

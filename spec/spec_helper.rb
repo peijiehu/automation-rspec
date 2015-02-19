@@ -71,7 +71,7 @@ else
     end
 
     Utils.logger.debug remote_capabilities
-    puts remote_capabilities
+
     default_remote_options = {
         :browser => :remote,
         :url => "http://#{user}:#{pass}@ondemand.saucelabs.com/wd/hub",

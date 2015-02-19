@@ -23,7 +23,7 @@ ruby web app, and testing against the locally running web app without browser.
         env.yml              # remote app name and url to be tested on
 
 ## TODO
-* reset session after each example;
+* inspect why there's an additional browser open at the end of a spec;
 * saucelabs integration;
     - further integrate: send test name, status, etc to saucelabs jobs
 * parallelization;
