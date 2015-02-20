@@ -14,9 +14,8 @@ ruby web app, and testing against the locally running web app without browser.
     r_driver=chrome rspec            # to run all specs, with chrome
     r_driver=saucelabs rspec
     r_driver=saucelabs:sauce_username:platform_and_browser rspec
-
-  * To run specs in parallel, with serialized stdout printing out after all specs are done
-        $ parallel_rspec --serialize-stdout -n 15 spec/
+To run specs in parallel, with serialized stdout printing out after all specs are done
+    parallel_rspec --serialize-stdout -n 15 spec/
 
 ## What should be in the hidden config/
     config/
