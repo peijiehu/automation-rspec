@@ -15,8 +15,20 @@ ruby web app, and testing against the locally running web app without browser.
     r_driver=saucelabs rspec
     r_driver=saucelabs:sauce_username:platform_and_browser rspec
 To run specs in parallel, with serialized stdout printing out after all specs are done
+(note that when running specs through 'parallel_rspec', options in .rspec_parallel will be used, instead of .rspec)
 ```
 parallel_rspec --serialize-stdout -n 15 spec/
+```
+Note that when running specs through 'parallel_rspec', options in .rspec_parallel will be used, instead of .rspec
+As you can see in .rspec_parallel, results will also be recorded in JUnit format under reports/, so CI like Jenkins can read and publish.
+
+To run with rake without options for parallel_rspec
+```
+rake
+```
+Of course you can
+```
+r_driver=saucelabs rake
 ```
 
 ## What should be in the hidden config/

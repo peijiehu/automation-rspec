@@ -12,11 +12,8 @@ describe 'home page', :type => :feature, :js => true do
     @hp.wait_for_lo_header(5)
   end
 
-  it 'should have header' do
-    expect(@hp).to have_lo_header
-  end
-
   it 'sign an existing renter in' do
+    expect(@hp).to have_lo_header
     sign_in_overlay = @hp.lo_header.click_link_sign_in
     li_srp = sign_in_overlay.sign_in_with(EMAIL, PASSWORD)
     expect(li_srp.li_header.signed_in_as).to eq(EMAIL)
