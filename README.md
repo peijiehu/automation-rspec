@@ -15,6 +15,9 @@ ruby web app, and testing against the locally running web app without browser.
     r_driver=saucelabs rspec
     r_driver=saucelabs:sauce_username:platform_and_browser rspec
 
+  #### To run specs in parallel, with serialized stdout printing out after all specs are done
+        parallel_rspec --serialize-stdout -n 15 spec/
+
 ## What should be in the hidden config/
     config/
         driver/
@@ -26,7 +29,6 @@ ruby web app, and testing against the locally running web app without browser.
 * inspect why there's an additional browser open at the end of a spec;
 * saucelabs integration;
     - further integrate: send test name, status, etc to saucelabs jobs
-* parallelization;
 * tagger utility to add tag(s) to spec/example
 
 ## My Preference
