@@ -27,7 +27,6 @@ ruby web app, and testing against the locally running web app without browser.
 * saucelabs integration;
     - further integrate: send test name, status, etc to saucelabs jobs
 * parallelization;
-* show datetime in log;
 * tagger utility to add tag(s) to spec/example
 
 ## My Preference

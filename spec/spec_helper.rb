@@ -10,6 +10,7 @@ require 'page_objects/all_page_objects'
 
 # Logging
 module Utils
+
   class Logger < ActiveSupport::Logger
     def initialize
       log_file_path = "#{Dir.pwd}/logs/rspec.log"
@@ -17,9 +18,19 @@ module Utils
       super(log_file)
     end
   end
+
   def self.logger
-    Logger.new
+    logger = Logger.new
+    my_format = "[%s#%d] %5s -- %s: %s\n"
+    original_formatter = Logger::Formatter.new
+    logger.formatter = proc { |severity, datetime, progname, msg|
+      formatted_datetime = original_formatter.send :format_datetime, datetime
+      str_msg = original_formatter.send :msg2str, msg
+      my_format % [formatted_datetime, $$, severity, progname, str_msg]
+    }
+    logger
   end
+
 end
 
 Capybara.run_server = false
