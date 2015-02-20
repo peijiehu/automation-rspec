@@ -10,6 +10,8 @@ ruby web app, and testing against the locally running web app without browser.
 
 ## Run Specs
     rspec                            # to run all specs, with default driver and env
+    rspec -t my_tag:my_value         # to run specs filtered by {:my_tag=>my_value}
+    rspec -t ~slow                   # to run specs without tag {:slow=>true}
     r_env=stg rspec                  # to run all specs, on stg server
     r_driver=chrome rspec            # to run all specs, with chrome
     r_driver=saucelabs rspec

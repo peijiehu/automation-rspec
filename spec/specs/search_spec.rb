@@ -1,9 +1,7 @@
-describe 'home page search', :type => :feature, :js => true do
+describe 'home page search', :type => :feature, :js => true, :smoke => true do
 
   before :each do
     @hp = Home.new
-    @hp.load
-    @hp.wait_for_lo_header(5)
   end
 
   it 'goes to SRP' do
