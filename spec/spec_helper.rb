@@ -28,9 +28,10 @@ Capybara.app_host = env_yaml[app_host]
 
 RSpec.configure do |config|
 
-  # quit driver right after each example's executed
   config.after :each do
-    Capybara.current_session.driver.quit
+    # do something right after each example's executed
+    # Capybara.current_session.driver will give you the current driver
+    # DatabaseCleaner.clean could be used here
   end
 
   # rspec-expectations config goes here. You can use an alternate

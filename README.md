@@ -41,10 +41,8 @@ r_driver=saucelabs rake
         env.yml              # remote app name and url to be tested on
 
 ## TODO
-* inspect why there's an additional browser open at the end of a spec;
 * saucelabs integration;
     - further integrate: send test name, status, etc to saucelabs jobs
-* tagger utility to add tag(s) to spec/example
 
 ## My Preference
 
