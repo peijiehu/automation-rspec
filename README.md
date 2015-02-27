@@ -33,6 +33,13 @@ Of course you can
 r_driver=saucelabs rake
 ```
 
+## Performance Testing
+Load testing - JMeter
+First, install jmeter with brew;
+Install JMeter standard plugin which contains CMDRunner, which is used to generate graphs for reports;
+Performance tests are in perf/, to run them:
+    bin/jenkins_run_perf.sh
+
 ## What should be in the hidden config/
     config/
         driver/
