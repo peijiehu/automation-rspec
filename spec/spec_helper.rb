@@ -3,6 +3,7 @@ require 'capybara'
 require 'capybara/rspec'
 require 'site_prism'
 require 'yaml'
+require 'pry'
 
 require 'page_objects/all_page_objects'
 require 'utils/all_utils'
@@ -16,7 +17,9 @@ Capybara.default_wait_time = 10
 # set default js enabled driver based on user input(env variable),
 # which applies to all tests marked with :type => :feature
 # default is :selenium, and selenium uses :firefox by default
-Capybara.javascript_driver = Utils::DriverInit.driver
+driver_helper = Utils::DriverHelper.new
+driver_to_use = driver_helper.driver
+Capybara.javascript_driver = driver_to_use
 
 # sets app_host based on user input(env variable)
 app_host = ENV['r_env'] || begin
@@ -28,10 +31,23 @@ Capybara.app_host = env_yaml[app_host]
 
 RSpec.configure do |config|
 
-  config.after :each do
+  config.before :each do |example|
+    example_full_description = example.full_description
+    Utils.logger.debug "example full description: #{example_full_description}"
+    begin
+      driver_helper.set_sauce_session_name(example_full_description) if driver_to_use.to_s.include?('saucelabs') && !driver_to_use.nil?
+      Utils.logger.debug "Finished setting saucelabs session name for #{example_full_description}"
+    rescue
+      Utils.logger.debug "Failed setting saucelabs session name for #{example_full_description}"
+    end
+  end
+
+  config.append_after :each do |example|
     # do something right after each example's executed
     # Capybara.current_session.driver will give you the current driver
     # DatabaseCleaner.clean could be used here
+    execution_result = example.metadata[:example_group][:execution_result].status
+    # todo may need custom reporter to get status since status isn't set until all afters are run
   end
 
   # rspec-expectations config goes here. You can use an alternate
