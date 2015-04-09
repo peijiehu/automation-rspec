@@ -40,6 +40,8 @@ RSpec.configure do |config|
     rescue
       Utils.logger.debug "Failed setting saucelabs session name for #{example_full_description}"
     end
+    # puts spec_dir = File.dirname(example.metadata[:file_path])
+    run_before
   end
 
   config.append_after :each do |example|

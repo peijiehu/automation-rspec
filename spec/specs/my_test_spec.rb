@@ -9,7 +9,7 @@ describe 'home page', :type => :feature, :js => true, :smoke => true do
     Utils.logger.debug "example: #{example.description}"
   end
 
-  it 'sign an existing renter in', :slow => true do |example|
+  it 'sign an existing renter in', :slow, :random_tag do |example|
     # this expect is just to show off you can use 'example' in a lot of places
     expect(example.description).to eq('sign an existing renter in')
     expect(@hp).to have_lo_header
@@ -18,7 +18,7 @@ describe 'home page', :type => :feature, :js => true, :smoke => true do
     expect(li_srp.li_header.signed_in_as).to eq(EMAIL)
   end
 
-  it 'test skip', :skip => 'test spec, need to remove', :test_skip => true do
+  it 'test skip', :test_skip, :skip => 'test spec, need to remove' do
     expect(true).to eq(false)
   end
 

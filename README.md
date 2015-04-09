@@ -43,6 +43,7 @@ r_driver=saucelabs rake
 ## TODO
 * saucelabs integration;
     - further integrate: send test name, status, etc to saucelabs jobs
+* capybara-webkit is the best way to go?
 
 ## My Preference
 
