@@ -8,4 +8,9 @@ class LoHeaderSection < SitePrism::Section
     SignIn.new
   end
 
+  def click_link_reg
+    link_reg.click
+    Registration.new
+  end
+
 end

@@ -1,4 +1,6 @@
 config/*
 .idea
 logs/*
+bin
 reports/*
+.bundle
