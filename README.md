@@ -1,8 +1,6 @@
 # automation-rspec
 
-Prototype for building test automation framework with RSpec, Capybara, Selenium and SitePrism.
-Other than the primary usage being for selenium tests, this framework can be embedded into an
-ruby web app, and testing against the locally running web app without browser.
+Prototype for building test automation framework for both headless and browser testing with RSpec, Capybara, Selenium and SitePrism.
 
 ## Setup
     Clone this project
@@ -49,9 +47,21 @@ r_driver=saucelabs rake
 * saucelabs integration;
     - further integrate: send test name, status, etc to saucelabs jobs
 * capybara-webkit is the best way to go?
+* run a specific example by example name: override -e or add a new option
+* continue as a standalone framework VS convert to a gem(will enable it to be embedded into a ruby web app and testing
+  a locally running app without browser)
 
 ## My Preference
 
 I'm not a big fan of keyword driven framework such as Cucumber, it requires work by more people
 from different departments, an engineer can get bored quickly and it can become hard to maintain;
 SitePrism makes feature tests well organized, and strikes a nice balance between readability and conciseness.
+
+#### Advantages over Minitest
+parallel: highly configurable parallel-tests gem, works out of the box(eg. integrates with saucelabs without any effort)
+headless: capybara-webkit is easy to install(just a gem) and to work with, compared to phantomjs ghost for minitest
+          which seems similar but is actually a pain to work with(issues during test run and it requires
+          installation of phantomjs which differs from OS to OS)
+built-in tagging: predefined tags and custom tags
+skip: doesn't run before hooks for skipped specs which makes sense while minitest runs before hooks if you mark a test as skip
+Bonus point if you use rspec for unit testing: consistency(not that important though)
