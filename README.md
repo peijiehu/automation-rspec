@@ -58,10 +58,10 @@ from different departments, an engineer can get bored quickly and it can become 
 SitePrism makes feature tests well organized, and strikes a nice balance between readability and conciseness.
 
 #### Advantages over Minitest
-parallel: highly configurable parallel-tests gem, works out of the box(eg. integrates with saucelabs without any effort)
-headless: capybara-webkit is easy to install(just a gem) and to work with, compared to phantomjs ghost for minitest
+* parallel: highly configurable parallel-tests gem, works out of the box(eg. integrates with saucelabs without any effort)
+* headless: capybara-webkit is easy to install(just a gem) and to work with, compared to phantomjs ghost for minitest
           which seems similar but is actually a pain to work with(issues during test run and it requires
           installation of phantomjs which differs from OS to OS)
-built-in tagging: predefined tags and custom tags
-skip: doesn't run before hooks for skipped specs which makes sense while minitest runs before hooks if you mark a test as skip
-Bonus point if you use rspec for unit testing: consistency(not that important though)
+* built-in tagging: predefined tags and custom tags
+* skip: doesn't run before hooks for skipped specs which makes sense while minitest runs before hooks if you mark a test as skip
+* Bonus point if you use rspec for unit testing: consistency(not that important though)
