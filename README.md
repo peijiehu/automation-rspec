@@ -24,6 +24,14 @@ To run specs in parallel, with serialized stdout printing out after all specs ar
 ```
 parallel_rspec --serialize-stdout -n 15 spec/
 ```
+Additionally, --pattern or -p could be useful when you need to only run specs that match certain pattern
+For example, command below will run all examples from search_engine_spec since this is the only spec has 'search' in filename:
+```
+parallel_rspec -p search --serialize-stdout -n 15 spec/
+```
+Or, similarly, pass rspec options to parallel_rspec with option -t '[OPTIONS]' or --test-options '[OPTIONS]' so you can
+filter out some examples, not limited to specs the one above.
+
 Note that when running specs through 'parallel_rspec', options in .rspec_parallel will be used, instead of .rspec
 As you can see in .rspec_parallel, results will also be recorded in JUnit format under reports/, so CI like Jenkins can read and publish.
 
@@ -44,10 +52,11 @@ r_driver=saucelabs rake
         env.yml              # remote app name and url to be tested on
 
 ## TODO
+* example level parallelization instead of spec level
+* run a specific example by example name: override -e or add a new option
 * saucelabs integration;
     - further integrate: send test name, status, etc to saucelabs jobs
 * capybara-webkit is the best way to go?
-* run a specific example by example name: override -e or add a new option
 * continue as a standalone framework VS convert to a gem(will enable it to be embedded into a ruby web app and testing
   a locally running app without browser)
 
