@@ -45,7 +45,11 @@ RSpec.configure do |config|
     end
     # puts spec_dir = File.dirname(example.metadata[:file_path])
     page.driver.allow_url '*' if is_webkit
-    run_before
+    begin
+      run_before
+    rescue NameError
+      true
+    end
   end
 
   config.append_after :each do |example|
