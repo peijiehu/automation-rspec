@@ -1,5 +1,6 @@
 require 'capybara'
 require 'selenium-webdriver'
+require 'capybara-webkit'
 require 'rest-client'
 
 module Utils
@@ -19,6 +20,8 @@ module Utils
       if ENV['r_driver'].nil?
         # set default_driver to a local firefox
         driver_to_use = 'firefox'
+      elsif ENV['r_driver'] == 'webkit'
+        driver_to_use = 'webkit'
       else
         # cmd_r_driver may be 'chrome' or ['saucelabs', 'phu', 'win7_ff34'], etc
         cmd_r_driver = ENV['r_driver'].split(':')
@@ -60,7 +63,6 @@ module Utils
         driver_to_use = cmd_r_driver[0]
       end
 
-      driver_to_use = driver_to_use.to_sym
       driver_to_use
     end
 

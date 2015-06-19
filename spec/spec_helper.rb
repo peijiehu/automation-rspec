@@ -4,7 +4,6 @@ require 'capybara/rspec'
 require 'site_prism'
 require 'yaml'
 require 'pry'
-require 'capybara-webkit'
 
 require 'page_objects/all_page_objects'
 require 'utils/all_utils'
@@ -20,9 +19,7 @@ Capybara.default_wait_time = 10
 # default is :selenium, and selenium uses :firefox by default
 driver_helper = Utils::DriverHelper.new
 driver_to_use = driver_helper.driver
-is_webkit = (ENV['r_driver'] == 'webkit')
-driver_to_use = :webkit if is_webkit # override driver_to_use to webkit if it's webkit
-Capybara.javascript_driver = driver_to_use
+Capybara.javascript_driver = driver_to_use.to_sym
 
 # sets app_host based on user input(env variable)
 app_host = ENV['r_env'] || begin
@@ -38,13 +35,13 @@ RSpec.configure do |config|
     example_full_description = example.full_description
     Utils.logger.debug "example full description: #{example_full_description}"
     begin
-      driver_helper.set_sauce_session_name(example_full_description) if driver_to_use.to_s.include?('saucelabs') && !driver_to_use.nil?
+      driver_helper.set_sauce_session_name(example_full_description) if driver_to_use.include?('saucelabs') && !driver_to_use.nil?
       Utils.logger.debug "Finished setting saucelabs session name for #{example_full_description}"
     rescue
       Utils.logger.debug "Failed setting saucelabs session name for #{example_full_description}"
     end
     # puts spec_dir = File.dirname(example.metadata[:file_path])
-    page.driver.allow_url '*' if is_webkit
+    page.driver.allow_url '*' if driver_to_use == 'webkit'
     begin
       run_before
     rescue NameError
