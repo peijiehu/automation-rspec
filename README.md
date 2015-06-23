@@ -56,9 +56,9 @@ r_driver=saucelabs rake
 * run a specific example by example name: override -e or add a new option
 * saucelabs integration;
     - further integrate: send test name, status, etc to saucelabs jobs
-* capybara-webkit is the best way to go?
 * continue as a standalone framework VS convert to a gem(will enable it to be embedded into a ruby web app and testing
   a locally running app without browser)
+* wrapper for page object instantiation, more convenient methods in base or wherever
 
 ## My Preference
 
@@ -68,9 +68,13 @@ SitePrism makes feature tests well organized, and strikes a nice balance between
 
 #### Advantages over Minitest
 * parallel: highly configurable parallel-tests gem, works out of the box(eg. integrates with saucelabs without any effort)
-* headless: capybara-webkit is easy to install(just a gem) and to work with, compared to phantomjs ghost for minitest
-          which seems similar but is actually a pain to work with(issues during test run and it requires
-          installation of phantomjs which differs from OS to OS)
+* headless:
+    - capybara-webkit is easy to install(just a gem) and to work with, compared to phantomjs
+    ghost for minitest is a pain to work with(issues during test run and installation of phantomjs differs from OS to OS)
+    - capybara-webkit doesn't require you to explicitly run anything on the background and it allows multiple headless tests
+    running at the same time on one machine, while phantomjs requires you to start ghost driver process at a port of localhost
+    and it only allows one test to connect to one port which makes parallelization for headless testing really tough.
+    drawbacks: has dependency on Qt, requires xvfb on linux
 * built-in tagging: predefined tags and custom tags
 * skip: doesn't run before hooks for skipped specs which makes sense while minitest runs before hooks if you mark a test as skip
 * Bonus point if you use rspec for unit testing: consistency(not that important though)
