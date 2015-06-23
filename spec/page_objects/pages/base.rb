@@ -1,8 +1,8 @@
 # Base page object
 class Base < SitePrism::Page
 
-  def current_url
-    page.driver.current_url.downcase
+  def initialize
+    wait_for_ajax
   end
 
 end
