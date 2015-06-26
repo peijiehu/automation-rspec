@@ -6,12 +6,29 @@ require 'rest-client'
 module Utils
   class DriverHelper
 
+    LOCAL_DRIVERS = [:firefox]
     attr_accessor :user, :pass, :driver_to_use
+    attr_accessor :driver_config
+
+    def initialize(config_file)
+      configure_driver_with(config_file)
+    end
+
+    # @param config_type [Symbol] eg. :driver, :env
+    # @param path_to_yaml_file [String]
+    def configure_driver_with(path_to_yaml_file)
+      begin
+        self.driver_config = YAML::load_file(path_to_yaml_file)
+      rescue Errno::ENOENT
+        log(:warning, "YAML configuration file couldn't be found. Using defaults."); return
+      rescue Psych::SyntaxError
+        log(:warning, "YAML configuration file contains invalid syntax. Using defaults."); return
+      end
+    end
 
     def driver
       # Local drivers registration
-      local_drivers = [:firefox, :chrome]
-      local_drivers.each do |driver|
+      LOCAL_DRIVERS.each do |driver|
         Capybara.register_driver driver do |app|
           Capybara::Selenium::Driver.new(app, :browser => driver)
         end
@@ -20,8 +37,8 @@ module Utils
       if ENV['r_driver'].nil?
         # set default_driver to a local firefox
         driver_to_use = 'firefox'
-      elsif ENV['r_driver'] == 'webkit'
-        driver_to_use = 'webkit'
+      # elsif ENV['r_driver'] == 'webkit'
+      #   driver_to_use = 'webkit'
       else
         # cmd_r_driver may be 'chrome' or ['saucelabs', 'phu', 'win7_ff34'], etc
         cmd_r_driver = ENV['r_driver'].split(':')
@@ -29,7 +46,7 @@ module Utils
         # Remote driver registration
         # Retrieve hub url, user credentials and browser info from saucelabs.yml
         if ENV['r_driver'].include?('saucelabs')
-          remote_driver_yaml = YAML.load_file("#{Dir.pwd}/config/driver/saucelabs.yml")
+          remote_driver_yaml = self.driver_config
           remote_capabilities = Selenium::WebDriver::Remote::Capabilities.new
           overrides_hash = remote_driver_yaml['overrides']
           if cmd_r_driver[1].nil?

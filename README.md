@@ -11,7 +11,6 @@ Prototype for building test automation framework for both headless and browser t
     rspec -t my_tag:my_value         # to run specs filtered by {:my_tag=>my_value}
     rspec -t ~slow                   # to run specs without tag {:slow=>true}
     r_env=stg rspec                  # to run all specs, on stg server
-    r_driver=chrome rspec            # to run all specs, with chrome
     r_driver=saucelabs rspec
     r_driver=saucelabs:sauce_username:platform_and_browser rspec
 If your test doesn't care browser compatibility, but you still want javascript support, then go with headless webkit,
