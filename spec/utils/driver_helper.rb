@@ -37,8 +37,6 @@ module Utils
       if ENV['r_driver'].nil?
         # set default_driver to a local firefox
         driver_to_use = 'firefox'
-      # elsif ENV['r_driver'] == 'webkit'
-      #   driver_to_use = 'webkit'
       else
         # cmd_r_driver may be 'chrome' or ['saucelabs', 'phu', 'win7_ff34'], etc
         cmd_r_driver = ENV['r_driver'].split(':')
@@ -82,7 +80,6 @@ module Utils
 
       driver_to_use
     end
-
 
     # update session name on saucelabs
     def set_sauce_session_name(new_name)
